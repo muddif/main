@@ -20,64 +20,23 @@ mainFrame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
 mainFrame.Active = true
 mainFrame.Draggable = true
 
-local titleBar = Instance.new("Frame", mainFrame)
-titleBar.Size = UDim2.new(1, 0, 0.15, 0)
-titleBar.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
-
-local titleText = Instance.new("TextLabel", titleBar)
-titleText.Size = UDim2.new(0.8, 0, 1, 0)
-titleText.Text = "Antenna Control"
-titleText.TextScaled = true
-titleText.TextColor3 = Color3.new(1, 1, 1)
-titleText.BackgroundTransparency = 1
-
-local minimizeBtn = Instance.new("TextButton", titleBar)
-minimizeBtn.Size = UDim2.new(0.1, 0, 1, 0)
-minimizeBtn.Position = UDim2.new(0.8, 0, 0, 0)
-minimizeBtn.Text = "_"
-minimizeBtn.TextScaled = true
-
-local closeBtn = Instance.new("TextButton", titleBar)
-closeBtn.Size = UDim2.new(0.1, 0, 1, 0)
-closeBtn.Position = UDim2.new(0.9, 0, 0, 0)
-closeBtn.Text = "X"
-closeBtn.TextScaled = true
-closeBtn.BackgroundColor3 = Color3.new(1, 0.2, 0.2)
-
-local contentFrame = Instance.new("Frame", mainFrame)
-contentFrame.Size = UDim2.new(1, 0, 0.85, 0)
-contentFrame.Position = UDim2.new(0, 0, 0.15, 0)
-contentFrame.BackgroundTransparency = 1
-
-local aimBtn = Instance.new("TextButton", contentFrame)
+local aimBtn = Instance.new("TextButton", mainFrame)
 aimBtn.Size = UDim2.new(0.9, 0, 0.3, 0)
 aimBtn.Position = UDim2.new(0.05, 0, 0.05, 0)
 aimBtn.Text = "Auto Aim: OFF"
 aimBtn.TextScaled = true
 
-local rBtn = Instance.new("TextButton", contentFrame)
+local rBtn = Instance.new("TextButton", mainFrame)
 rBtn.Size = UDim2.new(0.4, 0, 0.3, 0)
 rBtn.Position = UDim2.new(0.05, 0, 0.4, 0)
 rBtn.Text = "R Antenna"
 rBtn.TextScaled = true
 
-local lBtn = Instance.new("TextButton", contentFrame)
+local lBtn = Instance.new("TextButton", mainFrame)
 lBtn.Size = UDim2.new(0.4, 0, 0.3, 0)
 lBtn.Position = UDim2.new(0.55, 0, 0.4, 0)
 lBtn.Text = "L Antenna"
 lBtn.TextScaled = true
-
-local minimized = false
-
-minimizeBtn.Activated:Connect(function()
-    minimized = not minimized
-    contentFrame.Visible = not minimized
-    mainFrame.Size = minimized and UDim2.new(0.35, 0, 0.15, 0) or UDim2.new(0.35, 0, 0.22, 0)
-end)
-
-closeBtn.Activated:Connect(function()
-    gui:Destroy()
-end)
 
 aimBtn.Activated:Connect(function()
     active = not active
