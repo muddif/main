@@ -1,15 +1,24 @@
-local p = game:GetService("Players").LocalPlayer
-local c = p.Character or p.CharacterAdded:Wait()
-local r = c:WaitForChild("HumanoidRootPart")
-local A = {L = Vector3.new(-23.5, 8, 0), R = Vector3.new(23.5, 8, 0)}
-local active, antenna = false, "L"
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
 
-local gui = Instance.new("ScreenGui", p.PlayerGui)
+local ANTENNA = {
+    L = Vector3.new(-23.5, 8, 0),
+    R = Vector3.new(23.5, 8, 0)
+}
+
+local active, antenna, grounded, hidden = false, "L", true, false
+
+local gui = Instance.new("ScreenGui", player.PlayerGui)
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0.35, 0, 0.2, 0)
+frame.Size = UDim2.new(0.35, 0, 0.22, 0)
 frame.Position = UDim2.new(0.1, 0, 0.7, 0)
 frame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-frame.Active, frame.Draggable = true, true
+frame.Active = true
+frame.Draggable = true
 
 local aimBtn = Instance.new("TextButton", frame)
 aimBtn.Size = UDim2.new(0.9, 0, 0.3, 0)
@@ -29,12 +38,12 @@ lBtn.Position = UDim2.new(0.55, 0, 0.4, 0)
 lBtn.Text = "L Antenna"
 lBtn.TextScaled = true
 
-local panicBtn = Instance.new("TextButton", frame)
-panicBtn.Size = UDim2.new(0.9, 0, 0.3, 0)
-panicBtn.Position = UDim2.new(0.05, 0, 0.75, 0)
-panicBtn.Text = "PANIC"
-panicBtn.TextScaled = true
-panicBtn.BackgroundColor3 = Color3.new(1, 0, 0)
+local hideBtn = Instance.new("TextButton", frame)
+hideBtn.Size = UDim2.new(0.9, 0, 0.3, 0)
+hideBtn.Position = UDim2.new(0.05, 0, 0.75, 0)
+hideBtn.Text = "Hide"
+hideBtn.TextScaled = true
+hideBtn.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
 
 aimBtn.Activated:Connect(function()
     active = not active
@@ -43,14 +52,21 @@ end)
 
 rBtn.Activated:Connect(function() antenna = "R" end)
 lBtn.Activated:Connect(function() antenna = "L" end)
-panicBtn.Activated:Connect(function() gui:Destroy() end)
+hideBtn.Activated:Connect(function()
+    hidden = not hidden
+    frame.Visible = not hidden
+    hideBtn.Text = hidden and "Show" or "Hide"
+end)
 
-game:GetService("RunService").Heartbeat:Connect(function()
-    if not active or not r then return end
-    
-    local pos = r.Position
-    local targetPos = A[antenna]
-    local flatTarget = Vector3.new(targetPos.X, pos.Y, targetPos.Z)
-    
-    r.CFrame = CFrame.lookAt(pos, flatTarget)
+local function CheckGround()
+    local ray = Ray.new(rootPart.Position, Vector3.new(0, -3, 0))
+    grounded = workspace:FindPartOnRayWithIgnoreList(ray, {character}) ~= nil
+end
+
+RunService.Heartbeat:Connect(function()
+    CheckGround()
+    if not active or not grounded or not rootPart then return end
+    local pos = rootPart.Position
+    local target = ANTENNA[antenna]
+    rootPart.CFrame = CFrame.lookAt(pos, Vector3.new(target.X, pos.Y, target.Z))
 end)
