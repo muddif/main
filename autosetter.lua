@@ -22,8 +22,14 @@ mainFrame.Draggable = true
 
 local titleBar = Instance.new("Frame", mainFrame)
 titleBar.Size = UDim2.new(1, 0, 0.15, 0)
-titleBar.Position = UDim2.new(0, 0, 0, 0)
 titleBar.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+
+local titleText = Instance.new("TextLabel", titleBar)
+titleText.Size = UDim2.new(0.8, 0, 1, 0)
+titleText.Text = "Antenna Control"
+titleText.TextScaled = true
+titleText.TextColor3 = Color3.new(1, 1, 1)
+titleText.BackgroundTransparency = 1
 
 local minimizeBtn = Instance.new("TextButton", titleBar)
 minimizeBtn.Size = UDim2.new(0.1, 0, 1, 0)
